@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './users.controller';
 import { UserService } from './user.service';
@@ -5,6 +6,7 @@ import { UserValidationService } from './uservalidation.service';
 import { UserDTO } from './user.dto';
 
 describe('UserController', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let userController: UserController;
   let userService: UserService;
 
@@ -51,7 +53,6 @@ describe('UserController', () => {
 //       }
 //       });
 //       });
-      
 //       describe('update', () => {
 //       it('should update a user', async () => {
 //       const user: UserDTO = { name: 'updated', email: 'updated@test.com' };
