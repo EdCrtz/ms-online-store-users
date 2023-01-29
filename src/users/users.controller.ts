@@ -7,6 +7,8 @@ import {
   Delete,
   Body,
   Param,
+  Response,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO } from './user.dto';
@@ -24,7 +26,12 @@ export class UserController {
     const users = await this.userService.findAll();
     return users.map((user) => new UserDTO(user));
   }
-
+  @Get('user')
+  async findOne(@Response() res): Promise<UserDTO> {
+    const userInfo = res.locals.user;
+    const user = await this.userService.findOne(userInfo.id);
+    return res.status(HttpStatus.OK).send(user);
+  }
   @Post()
   async create(@Body() user: UserDTO) {
     try {
@@ -37,20 +44,22 @@ export class UserController {
     }
   }
 
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() user: UserDTO) {
+  @Put('user')
+  async update(@Response() res, @Body() user: UserDTO) {
     try {
-      const updatedUser = await this.userService.update(id, user);
+      const userInfo = res.locals.user;
+      const updatedUser = await this.userService.update(userInfo.id, user);
       await this.userValidationService.validateCreate(user);
-      return new UserDTO(updatedUser);
+      return res.status(HttpStatus.OK).send(updatedUser);
     } catch (error) {
       return error;
     }
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    await this.userService.delete(id);
-    return { message: 'User deleted' };
+  @Delete('user')
+  async delete(@Response() res) {
+    const userInfo = res.locals.user;
+    await this.userService.delete(userInfo.id);
+    return res.status(HttpStatus.OK).send({ message: 'User deleted' });
   }
 }
